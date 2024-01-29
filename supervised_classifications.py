@@ -111,14 +111,8 @@ def read_data(dataset_id):
         data['gender'] = encoder.fit_transform(data['gender'])
         X = data.drop('classes', axis=1)
         y = data['classes']
-        k_best = SelectKBest(score_func=f_classif, k=9)
-        X_selected = k_best.fit_transform(X, y)
-        selected_feature_indices = k_best.get_support(indices=True)
-        selected_feature_names = X.columns[selected_feature_indices]
-        X_selected_df = pd.DataFrame(X_selected, columns=selected_feature_names)
-        data = pd.concat([X_selected_df, y], axis=1)
         smote = SMOTE(sampling_strategy='minority', random_state=1)
-        X_resampled, y_resampled = smote.fit_resample(X_selected_df, y)
+        X_resampled, y_resampled = smote.fit_resample(X, y)
         data = pd.concat([X_resampled, y_resampled], axis=1)
     return data
 
